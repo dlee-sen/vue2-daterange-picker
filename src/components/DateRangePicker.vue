@@ -65,7 +65,7 @@
             v-if="showRanges"
           >
             <calendar-ranges
-              @clickRange="clickRange"
+              @clickRange="clickPresetRange"
               @showCustomRange="showCustomRangeCalendars=true"
               :always-show-calendars="alwaysShowCalendars"
               :locale-data="locale"
@@ -164,7 +164,6 @@
               :autoApply="autoApply"
         >
           <div class="drp-buttons" v-if="!autoApply">
-            <span class="drp-selected" v-if="showCalendars">{{ rangeText }}</span>
             <button
               class="cancelBtn btn btn-sm btn-secondary"
               type="button"
@@ -173,7 +172,7 @@
             >{{ locale.cancelLabel }}
             </button>
             <button
-              class="applyBtn btn btn-sm btn-success"
+              class="applyBtn btn btn-sm btn-primary"
               :disabled="in_selection"
               type="button"
               @click="clickedApply"
@@ -289,6 +288,13 @@ export default {
      * Auto apply selected range. If false you need to click an apply button
      */
     autoApply: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Auto apply on selected preset. If false you need to click an apply button
+     */
+    autoApplyPreset: {
       type: Boolean,
       default: false,
     },
@@ -689,6 +695,12 @@ export default {
       this.onSelect();
 
       if (this.autoApply)
+        this.clickedApply()
+    },
+    clickPresetRange(value) {
+      this.clickRange(value);
+
+      if (this.autoApplyPreset)
         this.clickedApply()
     },
     onUpdateStartTime (value) {
